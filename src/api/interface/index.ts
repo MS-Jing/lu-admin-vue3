@@ -21,6 +21,7 @@ export interface ResPage<T> {
 export interface ReqPage {
   current: number;
   size: number;
+  sortList: string[];
 }
 
 // 文件上传模块

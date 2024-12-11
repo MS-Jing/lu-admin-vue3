@@ -40,6 +40,7 @@
       :border="border"
       :row-key="rowKey"
       @selection-change="selectionChange"
+      @sort-change="sortChange"
     >
       <!-- 默认插槽 -->
       <slot />
@@ -63,7 +64,9 @@
             </el-radio>
             <!-- sort -->
             <el-tag v-if="item.type == 'sort'" class="move">
-              <el-icon> <DCaret /></el-icon>
+              <el-icon>
+                <DCaret />
+              </el-icon>
             </el-tag>
           </template>
         </el-table-column>
@@ -103,13 +106,13 @@
 </template>
 
 <script setup lang="ts" name="ProTable">
-import { ref, watch, provide, onMounted, unref, computed, reactive } from "vue";
+import { computed, onMounted, provide, reactive, ref, unref, watch } from "vue";
 import { ElTable } from "element-plus";
 import { useTable } from "@/hooks/useTable";
 import { useSelection } from "@/hooks/useSelection";
 import { BreakPoint } from "@/components/Grid/interface";
 import { ColumnProps, TypeProps } from "@/components/ProTable/interface";
-import { Refresh, Operation, Search } from "@element-plus/icons-vue";
+import { Operation, Refresh, Search } from "@element-plus/icons-vue";
 import { generateUUID, handleProp } from "@/utils";
 import SearchForm from "@/components/SearchForm/index.vue";
 import Pagination from "./components/Pagination.vue";
@@ -171,6 +174,9 @@ const { selectionChange, selectedList, selectedListIds, isSelected } = useSelect
 // 表格操作 Hooks
 const { tableData, pageable, searchParam, searchInitParam, getTableList, search, reset, handleSizeChange, handleCurrentChange } =
   useTable(props.requestApi, props.initParam, props.pagination, props.dataCallback, props.requestError);
+
+// 排序列表
+searchInitParam.value.sortList = [];
 
 // 清空选中数据列表
 const clearSelection = () => tableRef.value!.clearSelection();
@@ -295,6 +301,18 @@ const dragSort = () => {
       emit("dragSort", { newIndex, oldIndex });
     }
   });
+};
+
+// 排序
+const sortChange = data => {
+  // 先删除
+  searchInitParam.value.sortList = [];
+  if (data.order) {
+    // 直接往里加
+    searchInitParam.value.sortList.push(data.prop + ":" + data.order.replace("ending", ""));
+  }
+  // 再次查询
+  search();
 };
 
 // 暴露给父组件的参数和方法 (外部需要什么，都可以从这里暴露出去)

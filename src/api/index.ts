@@ -8,6 +8,7 @@ import { checkStatus } from "./helper/checkStatus";
 import { AxiosCanceler } from "./helper/axiosCancel";
 import { useUserStore } from "@/stores/modules/user";
 import router from "@/routers";
+import qs from "qs";
 
 export interface CustomAxiosRequestConfig extends InternalAxiosRequestConfig {
   loading?: boolean;
@@ -20,7 +21,10 @@ const config = {
   // 设置超时时间
   timeout: ResultEnum.TIMEOUT as number,
   // 跨域时候允许携带凭证
-  withCredentials: true
+  withCredentials: true,
+  paramsSerializer: params => {
+    return qs.stringify(params, { arrayFormat: "repeat" });
+  }
 };
 
 const axiosCanceler = new AxiosCanceler();
