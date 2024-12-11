@@ -31,32 +31,6 @@ export namespace Upload {
   }
 }
 
-// 登录模块
-export namespace Login {
-  export interface ReqLoginForm {
-    userName: string;
-    password: string;
-    uuid: string;
-    captcha: string;
-  }
-  export interface ResLogin {
-    isLogin: boolean;
-    loginDevice: string;
-    loginId: string;
-    loginType: string;
-    sessionTimeout: string;
-    tag: string;
-    tokenActiveTimeout: string;
-    tokenName: string;
-    tokenSessionTimeout: string;
-    tokenTimeout: string;
-    tokenValue: string;
-  }
-  export interface ResAuthButtons {
-    [key: string]: string[];
-  }
-}
-
 // 用户管理模块
 export namespace User {
   export interface ReqUserParams extends ReqPage {

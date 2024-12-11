@@ -43,10 +43,9 @@
 import { onBeforeUnmount, onMounted, reactive, ref } from "vue";
 import { useRouter } from "vue-router";
 import { HOME_URL } from "@/config";
-import { Login } from "@/api/interface";
 import type { ElForm } from "element-plus";
 import { ElNotification } from "element-plus";
-import { loginApi, captchaApi } from "@/api/modules/login";
+import { loginApi, captchaApi, ReqLoginForm } from "@/api/modules/login";
 import { useUserStore } from "@/stores/modules/user";
 import { useTabsStore } from "@/stores/modules/tabs";
 import { useKeepAliveStore } from "@/stores/modules/keepAlive";
@@ -68,7 +67,7 @@ const loginRules = reactive({
 });
 
 const loading = ref(false);
-const loginForm = reactive<Login.ReqLoginForm>({
+const loginForm = reactive<ReqLoginForm>({
   userName: "super-admin",
   password: "111",
   uuid: "",
