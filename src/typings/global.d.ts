@@ -12,11 +12,11 @@ declare namespace Menu {
     icon: string;
     title: string;
     activeMenu?: string;
-    isLink?: string;
-    isHide: boolean;
-    isFull: boolean;
-    isAffix: boolean;
-    isKeepAlive: boolean;
+    link?: string;
+    hide: boolean;
+    full: boolean;
+    affix: boolean;
+    keepAlive: boolean;
   }
 }
 

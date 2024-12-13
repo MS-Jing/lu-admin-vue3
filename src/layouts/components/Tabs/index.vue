@@ -18,12 +18,12 @@
 
 <script setup lang="ts">
 import Sortable from "sortablejs";
-import { ref, computed, watch, onMounted } from "vue";
+import { computed, onMounted, ref, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { useGlobalStore } from "@/stores/modules/global";
 import { useTabsStore } from "@/stores/modules/tabs";
 import { useAuthStore } from "@/stores/modules/auth";
-import { TabsPaneContext, TabPaneName } from "element-plus";
+import { TabPaneName, TabsPaneContext } from "element-plus";
 import MoreButton from "./components/MoreButton.vue";
 
 const route = useRoute();
@@ -52,8 +52,8 @@ watch(
       title: route.meta.title as string,
       path: route.fullPath,
       name: route.name as string,
-      close: !route.meta.isAffix,
-      isKeepAlive: route.meta.isKeepAlive as boolean
+      close: !route.meta.affix,
+      isKeepAlive: route.meta.keepAlive as boolean
     };
     tabStore.addTabs(tabsParams);
   },
@@ -63,14 +63,14 @@ watch(
 // 初始化需要固定的 tabs
 const initTabs = () => {
   authStore.flatMenuListGet.forEach(item => {
-    if (item.meta.isAffix && !item.meta.isHide && !item.meta.isFull) {
+    if (item.meta.affix && !item.meta.hide && !item.meta.full) {
       const tabsParams = {
         icon: item.meta.icon,
         title: item.meta.title,
         path: item.path,
         name: item.name,
-        close: !item.meta.isAffix,
-        isKeepAlive: item.meta.isKeepAlive
+        close: !item.meta.affix,
+        isKeepAlive: item.meta.keepAlive
       };
       tabStore.addTabs(tabsParams);
     }

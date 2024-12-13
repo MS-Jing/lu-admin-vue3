@@ -47,10 +47,10 @@ const keepAliveStore = useKeepAliveStore();
 const refreshCurrentPage: Function = inject("refresh") as Function;
 const refresh = () => {
   setTimeout(() => {
-    route.meta.isKeepAlive && keepAliveStore.removeKeepAliveName(route.fullPath as string);
+    route.meta.keepAlive && keepAliveStore.removeKeepAliveName(route.fullPath as string);
     refreshCurrentPage(false);
     nextTick(() => {
-      route.meta.isKeepAlive && keepAliveStore.addKeepAliveName(route.fullPath as string);
+      route.meta.keepAlive && keepAliveStore.addKeepAliveName(route.fullPath as string);
       refreshCurrentPage(true);
     });
   }, 0);
@@ -70,7 +70,7 @@ const maximize = () => {
 
 // 关闭当前页
 const closeCurrentTab = () => {
-  if (route.meta.isAffix) return;
+  if (route.meta.affix) return;
   tabStore.removeTabs(route.fullPath);
 };
 
