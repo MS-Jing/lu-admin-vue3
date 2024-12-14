@@ -11,25 +11,27 @@
     >
       <!-- 表格 header 按钮 -->
       <template #tableHeader>
-        <el-button type="primary" :icon="CirclePlus">新增菜单</el-button>
+        <el-button type="primary" :icon="CirclePlus" @click="onOperate('编辑', 2)">新增菜单</el-button>
       </template>
       <!-- 菜单操作 -->
-      <template #operation>
-        <el-button type="primary" link :icon="EditPen"> 编辑</el-button>
+      <template #operation="scope">
+        <el-button type="primary" link :icon="EditPen" @click="onOperate('编辑', 3, scope.row)"> 编辑</el-button>
         <el-button type="primary" link :icon="Delete"> 删除</el-button>
       </template>
     </ProTable>
+    <MenuOperateDrawer ref="drawerRef" />
   </div>
 </template>
 
 <script setup lang="ts" name="menuMange">
 import { ref } from "vue";
-import { ColumnProps, EnumProps } from "@/components/ProTable/interface";
+import { ColumnProps, EnumProps, ProTableInstance } from "@/components/ProTable/interface";
 import { CirclePlus, Delete, EditPen } from "@element-plus/icons-vue";
 import ProTable from "@/components/ProTable/index.vue";
-import { getSysMenuTree } from "@/api/modules/menu";
+import { getSysMenuTree, MenuTypeProps, saveSysMenu, SysMenuInfoResult, updateSysMenu } from "@/api/modules/menu";
+import MenuOperateDrawer from "@/views/system/menuMange/MenuOperateDrawer.vue";
 
-const proTable = ref();
+const proTable = ref<ProTableInstance>();
 
 const getTableTree = () => {
   return getSysMenuTree();
@@ -48,28 +50,10 @@ const yesOrNo: EnumProps[] = [
   }
 ];
 
-const MenuTypeProps: EnumProps[] = [
-  {
-    value: 1,
-    label: "目录",
-    tagType: "primary"
-  },
-  {
-    value: 2,
-    label: "菜单",
-    tagType: "success"
-  },
-  {
-    value: 3,
-    label: "按钮",
-    tagType: "info"
-  }
-];
-
 // 表格配置项
 const columns: ColumnProps[] = [
   { prop: "meta.title", label: "菜单标题", width: 200, align: "left", fixed: "left" },
-  { prop: "moduleName", label: "所属模块", fixed: "left" },
+  { prop: "moduleName", label: "所属模块", width: 100, fixed: "left" },
   {
     prop: "menuType",
     label: "类型",
@@ -87,4 +71,16 @@ const columns: ColumnProps[] = [
   { prop: "meta.keepAlive", label: "路由缓存", width: 100, tag: true, enum: yesOrNo },
   { prop: "operation", label: "操作", width: 250, fixed: "right" }
 ];
+const drawerRef = ref<InstanceType<typeof MenuOperateDrawer> | null>(null);
+const onOperate = (title: string, operate: number, row: Partial<SysMenuInfoResult> = {}) => {
+  const params = {
+    title: title,
+    isSave: operate == 2,
+    isUpdate: operate == 3,
+    row: { ...row },
+    api: operate == 2 ? saveSysMenu : updateSysMenu,
+    getTableList: proTable.value?.getTableList
+  };
+  drawerRef.value?.openDrawer(params);
+};
 </script>
