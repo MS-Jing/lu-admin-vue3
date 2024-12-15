@@ -109,15 +109,11 @@ const rules = reactive({
 
 // 可选模块
 const modulesInfoList = ref<ModuleInfo[]>([]);
-// 菜单树，用于选择父菜单
-const menuTree = ref<SysMenuInfoResult>();
+// 构建根目录菜单树，用于选择父菜单
+const menuTree = ref<SysMenuInfoResult>({ id: "0", parentId: "0", menuType: 1, meta: { title: "根目录" }, children: [] });
 onMounted(async () => {
   let { data } = await getModulesInfo();
   modulesInfoList.value = data;
-  // 构建根目录
-  menuTree.value = { id: "0", parentId: "0", menuType: 1, meta: { title: "根目录" }, children: [] };
-  let result = await getSysMenuTree();
-  menuTree.value.children = result.data;
 });
 
 interface DrawerProps {
@@ -137,7 +133,12 @@ const drawerProps = ref<DrawerProps>({
   row: {}
 });
 
-const operateDataInfo = ref<UpdateSysMenuParam | SaveSysMenuParam>({ menuType: 1, keepAlive: true, sortCode: 999 });
+const operateDataInfo = ref<UpdateSysMenuParam | SaveSysMenuParam>({
+  parentId: "0",
+  menuType: 1,
+  keepAlive: true,
+  sortCode: 999
+});
 
 const openDrawer = async (params: DrawerProps) => {
   if (params.isUpdate) {
@@ -155,6 +156,7 @@ const openDrawer = async (params: DrawerProps) => {
       keepAlive: data.meta?.keepAlive
     };
   }
+  menuTree.value.children = (await getSysMenuTree()).data;
   drawerProps.value = params;
   drawerVisible.value = true;
   console.log(operateDataInfo.value);
