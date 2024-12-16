@@ -51,8 +51,8 @@ export interface MetaInfoResult {
 /**
  * 系统菜单树 主要用于总览菜单管理
  */
-export const getSysMenuTree = () => {
-  return http.get<SysMenuInfoResult[]>(baseUrl + `/tree`, {}, { loading: false });
+export const getSysMenuTree = (menuType: number[] = [1, 2, 3]) => {
+  return http.get<SysMenuInfoResult[]>(baseUrl + `/tree/` + menuType, {}, { loading: false });
 };
 
 export const getSysMenuInfo = (id: string | undefined) => {

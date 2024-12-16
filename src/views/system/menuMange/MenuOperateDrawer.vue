@@ -11,8 +11,12 @@
           />
         </el-select>
       </el-form-item>
-      <el-form-item label="父级菜单" prop="parentId">
-        <!--todo 限制 目录只能选目录 菜单只能选目录，按钮只能选菜单-->
+      <el-form-item label="类型" prop="menuType">
+        <el-radio-group v-model="operateDataInfo.menuType" @change="onChangeMenuType">
+          <el-radio-button v-for="option in MenuTypeProps" :key="option.value" :value="option.value" :label="option.label" />
+        </el-radio-group>
+      </el-form-item>
+      <el-form-item label="父级" prop="parentId">
         <el-tree-select
           v-model="operateDataInfo.parentId"
           value-key="id"
@@ -22,21 +26,14 @@
           :render-after-expand="false"
           show-checkbox
           check-on-click-node
-          placeholder="请选择父级菜单"
+          placeholder="请选择父级"
         />
       </el-form-item>
-      <el-form-item label="菜单类型" prop="menuType">
-        <el-select v-model="operateDataInfo.menuType" filterable placeholder="请选择菜单类型" clearable>
-          <el-option v-for="option in MenuTypeProps" :key="option.value" :value="option.value" :label="option.label">
-            <el-tag :type="option.tagType">{{ option.label }}</el-tag>
-          </el-option>
-        </el-select>
+      <el-form-item v-if="operateDataInfo.menuType < 3" label="路由" prop="path">
+        <el-input v-model="operateDataInfo.path" placeholder="请输入路由" clearable></el-input>
       </el-form-item>
-      <el-form-item v-if="operateDataInfo.menuType < 3" label="菜单路由" prop="path">
-        <el-input v-model="operateDataInfo.path" placeholder="请输入菜单路由" clearable></el-input>
-      </el-form-item>
-      <el-form-item v-if="operateDataInfo.menuType < 3" label="菜单名称" prop="name">
-        <el-input v-model="operateDataInfo.name" placeholder="请输入菜单名称" clearable></el-input>
+      <el-form-item v-if="operateDataInfo.menuType < 3" label="name" prop="name">
+        <el-input v-model="operateDataInfo.name" placeholder="请输入路由name" clearable></el-input>
       </el-form-item>
       <el-form-item v-if="operateDataInfo.menuType == 2" label="菜单组件" prop="component">
         <el-input v-model="operateDataInfo.component" placeholder="请输入菜单组件" clearable></el-input>
@@ -44,13 +41,13 @@
       <el-form-item v-if="operateDataInfo.menuType == 1" label="重定向" prop="redirect">
         <el-input v-model="operateDataInfo.redirect" placeholder="非必填,可以重定向到任意路由" clearable></el-input>
       </el-form-item>
-      <el-form-item v-if="operateDataInfo.menuType < 3" label="菜单图标" prop="icon">
-        <el-input v-model="operateDataInfo.icon" placeholder="请选择菜单图标" clearable></el-input>
+      <el-form-item v-if="operateDataInfo.menuType < 3" label="图标" prop="icon">
+        <el-input v-model="operateDataInfo.icon" placeholder="请选择图标" clearable></el-input>
       </el-form-item>
-      <el-form-item label="菜单标题" prop="title">
-        <el-input v-model="operateDataInfo.title" placeholder="请输入菜单标题" clearable></el-input>
+      <el-form-item label="标题" prop="title">
+        <el-input v-model="operateDataInfo.title" placeholder="请输入标题" clearable></el-input>
       </el-form-item>
-      <el-form-item v-if="operateDataInfo.menuType == 2" label="在菜单上隐藏" prop="hide">
+      <el-form-item v-if="operateDataInfo.menuType == 2" label="隐藏" prop="hide">
         <el-switch v-model="operateDataInfo.hide" inline-prompt active-text="是" inactive-text="否" />
       </el-form-item>
       <el-space v-if="operateDataInfo.menuType == 2 && operateDataInfo.hide" fill>
@@ -64,16 +61,16 @@
       <el-form-item v-if="operateDataInfo.menuType == 2" label="链接" prop="link">
         <el-input v-model="operateDataInfo.link" placeholder="请输入链接" clearable></el-input>
       </el-form-item>
-      <el-form-item v-if="operateDataInfo.menuType == 2" label="充满整个屏幕" prop="full">
+      <el-form-item v-if="operateDataInfo.menuType == 2" label="充满屏幕" prop="full">
         <el-switch v-model="operateDataInfo.full" inline-prompt active-text="是" inactive-text="否" />
       </el-form-item>
-      <el-form-item v-if="operateDataInfo.menuType == 2" label="依附在tab上" prop="affix">
+      <el-form-item v-if="operateDataInfo.menuType == 2" label="依附tab" prop="affix">
         <el-switch v-model="operateDataInfo.affix" inline-prompt active-text="是" inactive-text="否" />
       </el-form-item>
-      <el-form-item v-if="operateDataInfo.menuType == 2" label="保持活跃" prop="keepAlive">
+      <el-form-item v-if="operateDataInfo.menuType == 2" label="keepAlive" prop="keepAlive">
         <el-switch v-model="operateDataInfo.keepAlive" inline-prompt active-text="是" inactive-text="否" />
       </el-form-item>
-      <el-form-item label="菜单排序" prop="sortCode">
+      <el-form-item label="排序" prop="sortCode">
         <el-input-number v-model="operateDataInfo.sortCode" />
       </el-form-item>
     </el-form>
@@ -98,13 +95,7 @@ import { ElMessage, FormInstance } from "element-plus";
 import { getModulesInfo, ModuleInfo } from "@/api/modules/common";
 
 const rules = reactive({
-  avatar: [{ required: true, message: "请上传用户头像" }],
-  photo: [{ required: true, message: "请上传用户照片" }],
-  username: [{ required: true, message: "请填写用户姓名" }],
-  gender: [{ required: true, message: "请选择性别" }],
-  idCard: [{ required: true, message: "请填写身份证号" }],
-  email: [{ required: true, message: "请填写邮箱" }],
-  address: [{ required: true, message: "请填写居住地址" }]
+  moduleName: [{ required: true, message: "所属模块为必选项" }]
 });
 
 // 可选模块
@@ -140,6 +131,21 @@ const operateDataInfo = ref<UpdateSysMenuParam | SaveSysMenuParam>({
   sortCode: 999
 });
 
+const onChangeMenuType = async value => {
+  // 限制 目录只能选目录 菜单只能选目录，按钮只能选菜单
+  let opt: number[];
+  if (value == 1) {
+    opt = [1];
+  } else if (value == 2) {
+    opt = [1];
+  } else if (value == 3) {
+    opt = [1, 2];
+  } else {
+    opt = [1, 2, 3];
+  }
+  menuTree.value.children = (await getSysMenuTree(opt)).data;
+};
+
 const openDrawer = async (params: DrawerProps) => {
   if (params.isUpdate) {
     // 更新信息，先查询
@@ -155,11 +161,13 @@ const openDrawer = async (params: DrawerProps) => {
       affix: data.meta?.affix,
       keepAlive: data.meta?.keepAlive
     };
+    await onChangeMenuType(data.menuType);
+  } else {
+    // 新增默认是目录
+    await onChangeMenuType(1);
   }
-  menuTree.value.children = (await getSysMenuTree()).data;
   drawerProps.value = params;
   drawerVisible.value = true;
-  console.log(operateDataInfo.value);
 };
 
 // 提交数据（新增/编辑）
@@ -168,6 +176,7 @@ const handleSubmit = () => {
   ruleFormRef.value!.validate(async valid => {
     if (!valid) return;
     try {
+      console.log(operateDataInfo.value);
       await drawerProps.value.api!(operateDataInfo.value);
       ElMessage.success({ message: `${drawerProps.value.title} 成功！` });
       drawerProps.value.getTableList!();
