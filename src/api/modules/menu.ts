@@ -124,3 +124,7 @@ export const updateSysMenu = (param: UpdateSysMenuParam) => {
 export const saveSysMenu = (param: SaveSysMenuParam) => {
   return http.post(baseUrl + `/save`, param);
 };
+
+export const deleteSysMenu = (id: string) => {
+  return http.post(baseUrl + `/delete/` + id);
+};

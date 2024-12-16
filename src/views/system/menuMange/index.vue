@@ -16,7 +16,7 @@
       <!-- 菜单操作 -->
       <template #operation="scope">
         <el-button type="primary" link :icon="EditPen" @click="onOperate('编辑', 3, scope.row)"> 编辑</el-button>
-        <el-button type="primary" link :icon="Delete"> 删除</el-button>
+        <el-button type="primary" link :icon="Delete" @click="onDelete(scope.row)"> 删除</el-button>
       </template>
     </ProTable>
     <MenuOperateDrawer ref="drawerRef" />
@@ -28,8 +28,9 @@ import { ref } from "vue";
 import { ColumnProps, EnumProps, ProTableInstance } from "@/components/ProTable/interface";
 import { CirclePlus, Delete, EditPen } from "@element-plus/icons-vue";
 import ProTable from "@/components/ProTable/index.vue";
-import { getSysMenuTree, MenuTypeProps, saveSysMenu, SysMenuInfoResult, updateSysMenu } from "@/api/modules/menu";
+import { deleteSysMenu, getSysMenuTree, MenuTypeProps, saveSysMenu, SysMenuInfoResult, updateSysMenu } from "@/api/modules/menu";
 import MenuOperateDrawer from "@/views/system/menuMange/MenuOperateDrawer.vue";
+import { useHandleData } from "@/hooks/useHandleData";
 
 const proTable = ref<ProTableInstance>();
 
@@ -71,6 +72,13 @@ const columns: ColumnProps[] = [
   { prop: "meta.keepAlive", label: "路由缓存", width: 100, tag: true, enum: yesOrNo },
   { prop: "operation", label: "操作", width: 250, fixed: "right" }
 ];
+
+// 删除信息
+const onDelete = async (row: SysMenuInfoResult) => {
+  await useHandleData(deleteSysMenu, row.id, `删除【${row.meta?.title}】菜单`);
+  proTable.value?.getTableList();
+};
+
 const drawerRef = ref<InstanceType<typeof MenuOperateDrawer> | null>(null);
 const onOperate = (title: string, operate: number, row: Partial<SysMenuInfoResult> = {}) => {
   const params = {
