@@ -124,12 +124,7 @@ const drawerProps = ref<DrawerProps>({
   row: {}
 });
 
-const operateDataInfo = ref<UpdateSysMenuParam | SaveSysMenuParam>({
-  parentId: "0",
-  menuType: 1,
-  keepAlive: true,
-  sortCode: 999
-});
+const operateDataInfo = ref<UpdateSysMenuParam | SaveSysMenuParam>({ menuType: 1 });
 
 const onChangeMenuType = async value => {
   // 限制 目录只能选目录 菜单只能选目录，按钮只能选菜单
@@ -162,7 +157,14 @@ const openDrawer = async (params: DrawerProps) => {
       keepAlive: data.meta?.keepAlive
     };
     await onChangeMenuType(data.menuType);
-  } else {
+  } else if (params.isSave) {
+    // 新增前的默认值
+    operateDataInfo.value = {
+      parentId: "0",
+      menuType: 1,
+      keepAlive: true,
+      sortCode: 999
+    };
     // 新增默认是目录
     await onChangeMenuType(1);
   }
