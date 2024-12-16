@@ -51,11 +51,14 @@
       <el-form-item v-if="operateDataInfo.menuType == 2" label="菜单组件" prop="component">
         <el-input v-model="operateDataInfo.component" placeholder="请输入菜单组件" clearable></el-input>
       </el-form-item>
+      <el-form-item v-if="operateDataInfo.menuType == 2" label="外链地址" prop="link">
+        <el-input v-model="operateDataInfo.link" placeholder="路由外链时填写的访问地址" clearable></el-input>
+      </el-form-item>
       <el-form-item v-if="operateDataInfo.menuType == 1" label="重定向" prop="redirect">
         <el-input v-model="operateDataInfo.redirect" placeholder="非必填,可以重定向到任意路由" clearable></el-input>
       </el-form-item>
       <el-form-item v-if="operateDataInfo.menuType < 3" label="图标" prop="icon">
-        <el-input v-model="operateDataInfo.icon" placeholder="请选择图标" clearable></el-input>
+        <SelectIcon v-model:icon-value="operateDataInfo.icon" placeholder="请选择图标" />
       </el-form-item>
       <el-form-item v-if="operateDataInfo.menuType == 2" label="隐藏" prop="hide">
         <el-switch v-model="operateDataInfo.hide" inline-prompt active-text="是" inactive-text="否" />
@@ -68,9 +71,6 @@
           <el-input v-model="operateDataInfo.activeMenu" placeholder="请输入活跃菜单" clearable></el-input>
         </el-form-item>
       </el-space>
-      <el-form-item v-if="operateDataInfo.menuType == 2" label="链接" prop="link">
-        <el-input v-model="operateDataInfo.link" placeholder="请输入链接" clearable></el-input>
-      </el-form-item>
       <el-form-item v-if="operateDataInfo.menuType == 2" label="充满屏幕" prop="full">
         <el-switch v-model="operateDataInfo.full" inline-prompt active-text="是" inactive-text="否" />
       </el-form-item>
@@ -103,6 +103,7 @@ import {
 } from "@/api/modules/menu";
 import { ElMessage, FormInstance } from "element-plus";
 import { getModulesInfo, ModuleInfo } from "@/api/modules/common";
+import SelectIcon from "@/components/SelectIcon/index.vue";
 
 const rules = reactive({
   moduleName: [{ required: true, message: "请填写所属模块" }],
