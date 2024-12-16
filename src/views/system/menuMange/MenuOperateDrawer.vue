@@ -21,7 +21,12 @@
       </el-form-item>
       <el-space fill>
         <el-alert type="info" show-icon :closable="false">
-          <p>如果类型是目录或者菜单,那么父级只能是目录！<br />如果是按钮那么父级只能是菜单！<br />否则会出现 “错误的父级类型!”</p>
+          <p>
+            如果类型是目录, 那么父级只能是目录！<br />
+            如果类型是菜单, 父级可以是目录,也可以是菜单(子菜单,隐藏起来的详情页)！<br />
+            如果是按钮, 那么父级只能是菜单！
+          </p>
+          <p>否则会出现 “错误的父级类型!”</p>
         </el-alert>
         <el-form-item label="父级" prop="parentId">
           <el-tree-select
@@ -37,10 +42,10 @@
           />
         </el-form-item>
       </el-space>
-      <el-form-item v-if="operateDataInfo.menuType < 3" label="路由" prop="path">
-        <el-input v-model="operateDataInfo.path" placeholder="请输入路由" clearable></el-input>
+      <el-form-item v-if="operateDataInfo.menuType < 3" label="路由(path)" prop="path">
+        <el-input v-model="operateDataInfo.path" placeholder="请输入路由路径" clearable></el-input>
       </el-form-item>
-      <el-form-item v-if="operateDataInfo.menuType < 3" label="name" prop="name">
+      <el-form-item v-if="operateDataInfo.menuType < 3" label="名称(name)" prop="name">
         <el-input v-model="operateDataInfo.name" placeholder="请输入路由name" clearable></el-input>
       </el-form-item>
       <el-form-item v-if="operateDataInfo.menuType == 2" label="菜单组件" prop="component">
@@ -72,7 +77,7 @@
       <el-form-item v-if="operateDataInfo.menuType == 2" label="依附tab" prop="affix">
         <el-switch v-model="operateDataInfo.affix" inline-prompt active-text="是" inactive-text="否" />
       </el-form-item>
-      <el-form-item v-if="operateDataInfo.menuType == 2" label="keepAlive" prop="keepAlive">
+      <el-form-item v-if="operateDataInfo.menuType < 3" label="keepAlive" prop="keepAlive">
         <el-switch v-model="operateDataInfo.keepAlive" inline-prompt active-text="是" inactive-text="否" />
       </el-form-item>
       <el-form-item label="排序" prop="sortCode">
@@ -139,7 +144,7 @@ const onChangeMenuType = async value => {
   if (value == 1) {
     opt = [1];
   } else if (value == 2) {
-    opt = [1];
+    opt = [1, 2];
   } else if (value == 3) {
     opt = [1, 2];
   } else {
