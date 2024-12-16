@@ -11,24 +11,32 @@
           />
         </el-select>
       </el-form-item>
+      <el-form-item label="标题" prop="title">
+        <el-input v-model="operateDataInfo.title" placeholder="请输入标题" clearable></el-input>
+      </el-form-item>
       <el-form-item label="类型" prop="menuType">
         <el-radio-group v-model="operateDataInfo.menuType" @change="onChangeMenuType">
           <el-radio-button v-for="option in MenuTypeProps" :key="option.value" :value="option.value" :label="option.label" />
         </el-radio-group>
       </el-form-item>
-      <el-form-item label="父级" prop="parentId">
-        <el-tree-select
-          v-model="operateDataInfo.parentId"
-          value-key="id"
-          :data="[menuTree]"
-          :props="{ label: data => data.meta?.title }"
-          check-strictly
-          :render-after-expand="false"
-          show-checkbox
-          check-on-click-node
-          placeholder="请选择父级"
-        />
-      </el-form-item>
+      <el-space fill>
+        <el-alert type="info" show-icon :closable="false">
+          <p>如果类型是目录或者菜单,那么父级只能是目录！<br />如果是按钮那么父级只能是菜单！<br />否则会出现 “错误的父级类型!”</p>
+        </el-alert>
+        <el-form-item label="父级" prop="parentId">
+          <el-tree-select
+            v-model="operateDataInfo.parentId"
+            value-key="id"
+            :data="[menuTree]"
+            :props="{ label: data => data.meta?.title }"
+            check-strictly
+            :render-after-expand="false"
+            show-checkbox
+            check-on-click-node
+            placeholder="请选择父级"
+          />
+        </el-form-item>
+      </el-space>
       <el-form-item v-if="operateDataInfo.menuType < 3" label="路由" prop="path">
         <el-input v-model="operateDataInfo.path" placeholder="请输入路由" clearable></el-input>
       </el-form-item>
@@ -43,9 +51,6 @@
       </el-form-item>
       <el-form-item v-if="operateDataInfo.menuType < 3" label="图标" prop="icon">
         <el-input v-model="operateDataInfo.icon" placeholder="请选择图标" clearable></el-input>
-      </el-form-item>
-      <el-form-item label="标题" prop="title">
-        <el-input v-model="operateDataInfo.title" placeholder="请输入标题" clearable></el-input>
       </el-form-item>
       <el-form-item v-if="operateDataInfo.menuType == 2" label="隐藏" prop="hide">
         <el-switch v-model="operateDataInfo.hide" inline-prompt active-text="是" inactive-text="否" />
@@ -95,7 +100,9 @@ import { ElMessage, FormInstance } from "element-plus";
 import { getModulesInfo, ModuleInfo } from "@/api/modules/common";
 
 const rules = reactive({
-  moduleName: [{ required: true, message: "所属模块为必选项" }]
+  moduleName: [{ required: true, message: "请填写所属模块" }],
+  title: [{ required: true, message: "请填写标题" }],
+  menuType: [{ required: true, message: "请选择类型" }]
 });
 
 // 可选模块
