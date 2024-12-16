@@ -23,7 +23,7 @@ export const getAuthButtonListApi = () => {
 
 export interface SysMenuInfoResult {
   id?: string;
-  parentId?: string;
+  parentId: string;
   menuType: number;
   path?: string;
   name?: string;
@@ -78,8 +78,8 @@ export const MenuTypeProps: EnumProps[] = [
 ];
 
 export interface UpdateSysMenuParam {
-  id?: string;
-  parentId?: string;
+  id: string;
+  parentId: string;
   menuType: number;
   path?: string;
   name?: string;
@@ -99,7 +99,7 @@ export interface UpdateSysMenuParam {
 
 export interface SaveSysMenuParam {
   id?: string;
-  parentId?: string;
+  parentId: string;
   menuType: number;
   path?: string;
   name?: string;

@@ -1,19 +1,6 @@
 <template>
   <el-drawer v-model="drawerVisible" :destroy-on-close="true" size="25%" :title="`${drawerProps.title}-菜单`">
     <el-form ref="ruleFormRef" label-width="100px" label-suffix=":" :rules="rules" :model="operateDataInfo">
-      <el-form-item label="所属模块" prop="moduleName">
-        <el-select v-model="operateDataInfo.moduleName" filterable placeholder="请选择所属模块" clearable>
-          <el-option
-            v-for="option in modulesInfoList"
-            :key="option.moduleName"
-            :value="option.moduleName"
-            :label="option.moduleName"
-          />
-        </el-select>
-      </el-form-item>
-      <el-form-item label="标题" prop="title">
-        <el-input v-model="operateDataInfo.title" placeholder="请输入标题" clearable></el-input>
-      </el-form-item>
       <el-form-item label="类型" prop="menuType">
         <el-radio-group v-model="operateDataInfo.menuType" @change="onChangeMenuType">
           <el-radio-button v-for="option in MenuTypeProps" :key="option.value" :value="option.value" :label="option.label" />
@@ -39,9 +26,29 @@
             show-checkbox
             check-on-click-node
             placeholder="请选择父级"
+            @current-change="syncModuleName"
           />
         </el-form-item>
       </el-space>
+      <el-form-item label="所属模块" prop="moduleName">
+        <el-select
+          v-model="operateDataInfo.moduleName"
+          :disabled="operateDataInfo.parentId != '0'"
+          filterable
+          placeholder="请选择所属模块"
+          clearable
+        >
+          <el-option
+            v-for="option in modulesInfoList"
+            :key="option.moduleName"
+            :value="option.moduleName"
+            :label="option.moduleName"
+          />
+        </el-select>
+      </el-form-item>
+      <el-form-item label="标题" prop="title">
+        <el-input v-model="operateDataInfo.title" placeholder="请输入标题" clearable></el-input>
+      </el-form-item>
       <el-form-item v-if="operateDataInfo.menuType < 3" label="路由(path)" prop="path">
         <el-input v-model="operateDataInfo.path" placeholder="请输入路由路径" clearable></el-input>
       </el-form-item>
@@ -108,6 +115,7 @@ import SelectIcon from "@/components/SelectIcon/index.vue";
 const rules = reactive({
   moduleName: [{ required: true, message: "请填写所属模块" }],
   title: [{ required: true, message: "请填写标题" }],
+  parentId: [{ required: true, message: "请选择父级" }],
   menuType: [{ required: true, message: "请选择类型" }]
 });
 
@@ -137,7 +145,7 @@ const drawerProps = ref<DrawerProps>({
   row: {}
 });
 
-const operateDataInfo = ref<UpdateSysMenuParam | SaveSysMenuParam>({ menuType: 1 });
+const operateDataInfo = ref<UpdateSysMenuParam | SaveSysMenuParam>({ menuType: 1, parentId: "0" });
 
 const onChangeMenuType = async value => {
   // 限制 目录只能选目录 菜单只能选目录，按钮只能选菜单
@@ -152,6 +160,10 @@ const onChangeMenuType = async value => {
     opt = [1, 2, 3];
   }
   menuTree.value.children = (await getSysMenuTree(opt)).data;
+};
+
+const syncModuleName = (value: SysMenuInfoResult) => {
+  operateDataInfo.value.moduleName = value.moduleName;
 };
 
 const openDrawer = async (params: DrawerProps) => {
