@@ -23,7 +23,6 @@
             :props="{ label: data => data.meta?.title }"
             check-strictly
             :render-after-expand="false"
-            show-checkbox
             check-on-click-node
             placeholder="请选择父级"
             @current-change="syncModuleName"
