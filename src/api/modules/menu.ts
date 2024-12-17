@@ -32,6 +32,7 @@ export interface SysMenuInfoResult {
   meta?: MetaInfoResult;
   sortCode?: number;
   moduleName?: string;
+  permission?: string;
   children?: SysMenuInfoResult[];
 
   [key: string]: any;
@@ -95,6 +96,7 @@ export interface UpdateSysMenuParam {
   keepAlive?: boolean;
   sortCode?: number;
   moduleName?: string;
+  permission?: string;
 }
 
 export interface SaveSysMenuParam {
@@ -115,6 +117,7 @@ export interface SaveSysMenuParam {
   keepAlive?: boolean;
   sortCode?: number;
   moduleName?: string;
+  permission?: string;
 }
 
 export const updateSysMenu = (param: UpdateSysMenuParam) => {

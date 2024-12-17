@@ -87,6 +87,9 @@
       <el-form-item v-if="operateDataInfo.menuType < 3" label="keepAlive" prop="keepAlive">
         <el-switch v-model="operateDataInfo.keepAlive" inline-prompt active-text="是" inactive-text="否" />
       </el-form-item>
+      <el-form-item v-if="operateDataInfo.menuType == 3" label="权限" prop="permission">
+        <el-input v-model="operateDataInfo.permission" placeholder="请输入按钮权限" clearable></el-input>
+      </el-form-item>
       <el-form-item label="排序" prop="sortCode">
         <el-input-number v-model="operateDataInfo.sortCode" />
       </el-form-item>
