@@ -20,6 +20,16 @@
         <el-button v-auth="'sys:sys_menu:update'" type="primary" link :icon="EditPen" @click="onOperate('编辑', 3, scope.row)">
           编辑
         </el-button>
+        <el-button
+          v-auth="'sys:sys_menu:save'"
+          v-if="scope.row.menuType != 3"
+          type="primary"
+          link
+          :icon="EditPen"
+          @click="onOperate('新增', 2, scope.row)"
+        >
+          新增
+        </el-button>
         <el-button v-auth="'sys:sys_menu:delete'" type="primary" link :icon="Delete" @click="onDelete(scope.row)">
           删除
         </el-button>

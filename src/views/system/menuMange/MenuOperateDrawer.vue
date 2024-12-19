@@ -187,13 +187,15 @@ const openDrawer = async (params: DrawerProps) => {
   } else if (params.isSave) {
     // 新增前的默认值
     operateDataInfo.value = {
-      parentId: "0",
-      menuType: 1,
+      parentId: params.row?.id ? params.row?.id : "0",
+      moduleName: params.row?.moduleName ? params.row?.moduleName : "",
+      // 菜单下级默认是按钮（可以是子菜单）
+      menuType: params.row?.menuType == 2 ? 3 : 1,
       keepAlive: true,
       sortCode: 999
     };
     // 新增默认是目录
-    await onChangeMenuType(1);
+    await onChangeMenuType(operateDataInfo.value.menuType);
   }
   drawerProps.value = params;
   drawerVisible.value = true;
