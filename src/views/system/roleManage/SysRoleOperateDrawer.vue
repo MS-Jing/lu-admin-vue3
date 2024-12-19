@@ -13,6 +13,7 @@
         </el-alert>
         <el-form-item label="菜单权限">
           <el-tree
+            style="width: 100%"
             ref="menuTreeRef"
             node-key="id"
             :data="menuTree"

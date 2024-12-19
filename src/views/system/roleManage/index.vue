@@ -4,12 +4,12 @@
       <ProTable ref="proTable" title="角色列表" row-key="path" :columns="columns" :request-api="getTableList">
         <!-- 表格 header 按钮 -->
         <template #tableHeader>
-          <el-button type="primary" :icon="CirclePlus" @click="onSave">新增菜单</el-button>
+          <el-button type="primary" :icon="CirclePlus" @click="onSave">新增角色</el-button>
         </template>
         <!-- 菜单操作 -->
         <template #operation="scope">
           <el-button type="primary" link :icon="EditPen" @click="onUpdate(scope.row)">编辑</el-button>
-          <el-button type="primary" link :icon="Delete">删除</el-button>
+          <el-button type="primary" link :icon="Delete" @click="onDelete(scope.row)">删除</el-button>
         </template>
       </ProTable>
       <SysRoleOperateDrawer ref="drawerRef"></SysRoleOperateDrawer>
@@ -21,9 +21,10 @@
 import { CirclePlus, Delete, EditPen } from "@element-plus/icons-vue";
 import ProTable from "@/components/ProTable/index.vue";
 import { ColumnProps, ProTableInstance } from "@/components/ProTable/interface";
-import { getRolePage, saveRole, SysRolePageResult, updateRole } from "@/api/modules/role";
+import { deleteSysRole, getRolePage, saveRole, SysRolePageResult, updateRole } from "@/api/modules/role";
 import { ref } from "vue";
 import SysRoleOperateDrawer from "@/views/system/roleManage/SysRoleOperateDrawer.vue";
+import { useHandleData } from "@/hooks/useHandleData";
 
 // 表格配置项
 const columns: ColumnProps[] = [
@@ -52,6 +53,7 @@ const onSave = () => {
     getTableList: proTable.value?.getTableList
   });
 };
+
 const onUpdate = (row: Partial<SysRolePageResult> = {}) => {
   drawerRef.value?.openDrawer({
     title: "更新",
@@ -61,5 +63,11 @@ const onUpdate = (row: Partial<SysRolePageResult> = {}) => {
     api: updateRole,
     getTableList: proTable.value?.getTableList
   });
+};
+
+// 删除信息
+const onDelete = async (row: SysRolePageResult) => {
+  await useHandleData(deleteSysRole, row.id, `删除【${row.roleName}】`);
+  proTable.value?.getTableList();
 };
 </script>

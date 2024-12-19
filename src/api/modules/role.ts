@@ -54,3 +54,7 @@ export interface SysRoleUpdateParam {
 export const updateRole = (param: SysRoleUpdateParam) => {
   return http.post(baseUrl + `/update`, param);
 };
+
+export const deleteSysRole = (id: string) => {
+  return http.post(baseUrl + `/delete/` + id);
+};
