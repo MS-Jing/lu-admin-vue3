@@ -205,7 +205,6 @@ const handleSubmit = () => {
   ruleFormRef.value!.validate(async valid => {
     if (!valid) return;
     try {
-      console.log(operateDataInfo.value);
       await drawerProps.value.api!(operateDataInfo.value);
       ElMessage.success({ message: `${drawerProps.value.title} 成功！` });
       drawerProps.value.getTableList!();
