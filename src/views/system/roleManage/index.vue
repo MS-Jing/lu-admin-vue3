@@ -4,12 +4,16 @@
       <ProTable ref="proTable" title="角色列表" row-key="path" :columns="columns" :request-api="getTableList">
         <!-- 表格 header 按钮 -->
         <template #tableHeader>
-          <el-button type="primary" :icon="CirclePlus" @click="onSave">新增角色</el-button>
+          <el-button v-auth="'sys:sys_role:save'" type="primary" :icon="CirclePlus" @click="onSave">新增角色</el-button>
         </template>
         <!-- 菜单操作 -->
         <template #operation="scope">
-          <el-button type="primary" link :icon="EditPen" @click="onUpdate(scope.row)">编辑</el-button>
-          <el-button type="primary" link :icon="Delete" @click="onDelete(scope.row)">删除</el-button>
+          <el-button v-auth="'sys:sys_role:update'" type="primary" link :icon="EditPen" @click="onUpdate(scope.row)">
+            编辑
+          </el-button>
+          <el-button v-auth="'sys:sys_role:delete'" type="primary" link :icon="Delete" @click="onDelete(scope.row)">
+            删除
+          </el-button>
         </template>
       </ProTable>
       <SysRoleOperateDrawer ref="drawerRef"></SysRoleOperateDrawer>

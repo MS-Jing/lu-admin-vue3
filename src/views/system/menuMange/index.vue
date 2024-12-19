@@ -11,12 +11,18 @@
     >
       <!-- 表格 header 按钮 -->
       <template #tableHeader>
-        <el-button type="primary" :icon="CirclePlus" @click="onOperate('新增', 2)">新增菜单</el-button>
+        <el-button v-auth="'sys:sys_menu:save'" type="primary" :icon="CirclePlus" @click="onOperate('新增', 2)">
+          新增菜单
+        </el-button>
       </template>
       <!-- 菜单操作 -->
       <template #operation="scope">
-        <el-button type="primary" link :icon="EditPen" @click="onOperate('编辑', 3, scope.row)"> 编辑</el-button>
-        <el-button type="primary" link :icon="Delete" @click="onDelete(scope.row)"> 删除</el-button>
+        <el-button v-auth="'sys:sys_menu:update'" type="primary" link :icon="EditPen" @click="onOperate('编辑', 3, scope.row)">
+          编辑
+        </el-button>
+        <el-button v-auth="'sys:sys_menu:delete'" type="primary" link :icon="Delete" @click="onDelete(scope.row)">
+          删除
+        </el-button>
       </template>
     </ProTable>
     <MenuOperateDrawer ref="drawerRef" />

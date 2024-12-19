@@ -3,17 +3,30 @@
     <ProTable ref="proTable" :columns="columns" :request-api="getTableList">
       <!-- 表格 header 按钮 -->
       <template #tableHeader="scope">
-        <el-button type="primary" :icon="CirclePlus" @click="openDrawer('新增', 2)">新增</el-button>
-        <el-button type="danger" :icon="Delete" plain :disabled="!scope.isSelected" @click="batchDelete(scope.selectedListIds)">
+        <el-button v-auth="'gen:table:save'" type="primary" :icon="CirclePlus" @click="openDrawer('新增', 2)">新增</el-button>
+        <el-button
+          v-auth="'gen:table:delete'"
+          type="danger"
+          :icon="Delete"
+          plain
+          :disabled="!scope.isSelected"
+          @click="batchDelete(scope.selectedListIds)"
+        >
           批量删除
         </el-button>
       </template>
       <!-- 表格操作 -->
       <template #operation="scope">
-        <el-button type="primary" link :icon="View" @click="openDrawer('查看', 1, scope.row)">查看</el-button>
-        <el-button type="primary" link :icon="EditPen" @click="openDrawer('编辑', 3, scope.row)">编辑</el-button>
-        <el-button type="primary" link :icon="EditPen" @click="openPreviewDrawer(scope.row)">预览/生成</el-button>
-        <el-button type="primary" link :icon="Delete" @click="deleteData(scope.row)">删除</el-button>
+        <el-button v-auth="'gen:table:info'" type="primary" link :icon="View" @click="openDrawer('查看', 1, scope.row)">
+          查看
+        </el-button>
+        <el-button v-auth="'gen:table:update'" type="primary" link :icon="EditPen" @click="openDrawer('编辑', 3, scope.row)">
+          编辑
+        </el-button>
+        <el-button v-auth="'gen:table:info'" type="primary" link :icon="EditPen" @click="openPreviewDrawer(scope.row)">
+          预览/生成
+        </el-button>
+        <el-button v-auth="'gen:table:delete'" type="primary" link :icon="Delete" @click="deleteData(scope.row)">删除</el-button>
       </template>
     </ProTable>
     <GeneratorOperateDrawer ref="drawerRef" />
